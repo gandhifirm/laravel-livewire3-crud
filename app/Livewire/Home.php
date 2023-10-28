@@ -18,6 +18,7 @@ class Home extends Component
     public $update_data = false;
     public $employee_id;
     public $employee_data;
+    public $keywords = '';
 
     public function clear() {
         // hapus isian form input
@@ -113,13 +114,30 @@ class Home extends Component
         $this->clear();
 
         // Lakukan refresh untuk seolah clear page pagination
-        return redirect("/");
+        // return redirect("/");
+        $this->resetPage();
+    }
+
+    public function updatingKeywords()
+    {
+        // Lakukan refresh ketika inputan dihapus, dan data akan dikembalikan ke halaman awal
+        $this->resetPage();
     }
 
     public function render()
     {
-        // Tampilkan seluruh data dari database
-        $employees = Employee::orderBy("id","desc")->paginate(2);
+        // Cek kondisi apakah ada inputan pada form pencarian
+        if ($this->keywords != null) {
+            // Tampilkan kondisi sesuai dengan keyword yang dimasukan
+            $employees = Employee::where("full_name","LIKE","%". $this->keywords ."%")
+                        ->orWhere("email","LIKE","%". $this->keywords ."%")
+                        ->orWhere("address","LIKE","%". $this->keywords ."%")
+                        ->orderBy("id","DESC")
+                        ->paginate(2);
+        } else {
+            // Tampilkan seluruh data dari database
+            $employees = Employee::orderBy("id","desc")->paginate(2);
+        }
 
         return view('livewire.home',[
             'employees' => $employees,

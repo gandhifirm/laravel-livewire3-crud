@@ -81,7 +81,11 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-title mb-4">
-                        <h2>Data Pegawai</h2>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h2 class="mb-0">Data Pegawai</h2>
+
+                            <input type="text" class="form-control w-25" wire:model.live='keywords' placeholder="Masukan kata kunci ...">
+                        </div>
                     </div>
 
                     <div class="table-responsive">
