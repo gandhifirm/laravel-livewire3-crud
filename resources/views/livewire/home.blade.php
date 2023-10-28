@@ -27,7 +27,7 @@
                         <div class="mb-3 row">
                             <label for="full_name" class="col-sm-2 col-form-label">Nama Lengkap</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="full_name" wire:model='full_name'>
+                                <input type="text" class="form-control" id="full_name" wire:model='full_name' autofocus>
                                 @error('full_name')
                                     <div class="text-sm text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -86,11 +86,44 @@
 
                             <input type="text" class="form-control w-25" wire:model.live='keywords' placeholder="Masukan kata kunci ...">
                         </div>
+
+                        @if ($employee_selected_id)
+                            <div class="mt-3 mb-2">
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modal_confirm_delete">Hapus {{ count($employee_selected_id) }} Data</button>
+
+                                {{-- modal confirm delete data --}}
+                                <div wire:ignore.self class="modal fade" id="modal_confirm_delete" tabindex="-1" aria-labelledby="modal_confirm_delete_label" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="modal_confirm_delete_label">
+                                                    Konfirmasi Hapus Data
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <div class="modal-body py-4">
+                                                <div class="text-center">
+                                                    <h4 class="mb-0">Apakah anda yakin akan menghapus <br> <span class="text-danger">"{{ count($employee_selected_id) }} Data"</span> ?</h4>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                <button wire:click='deleteBulk()' type="button" class="btn btn-primary" data-bs-dismiss="modal">Ya, Hapus</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- modal confirm delete data --}}
+                            </div>
+                        @endif
                     </div>
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
-                            <tr class="text-center">
+                            <tr class="text-center align-middle">
+                                <th></th>
                                 <th>No</th>
                                 <th>Nama Lengkap</th>
                                 <th>Email</th>
@@ -100,6 +133,9 @@
 
                             @forelse ($employees as $key => $employee)
                             <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" class="form-check-input" wire:key='{{ $employee->id }}' value="{{ $employee->id }}" wire:model.live='employee_selected_id'>
+                                </td>
                                 <td class="text-center">
                                     {{ $employees->firstItem() + $key }}
                                 </td>
@@ -147,7 +183,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="text-center py-4">Data Tidak Tersedia!</td>
+                                <td colspan="6" class="text-center py-4">Data Tidak Tersedia!</td>
                             </tr>
                             @endforelse
                         </table>

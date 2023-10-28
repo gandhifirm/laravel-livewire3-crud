@@ -19,6 +19,7 @@ class Home extends Component
     public $employee_id;
     public $employee_data;
     public $keywords = '';
+    public $employee_selected_id = [];
 
     public function clear() {
         // hapus isian form input
@@ -26,6 +27,7 @@ class Home extends Component
         $this->email = '';
         $this->address = '';
         $this->update_data = false;
+        $this->employee_id = [];
     }
 
     public function store() {
@@ -57,6 +59,7 @@ class Home extends Component
 
         // bersihkan form input setelah submit
         $this->clear();
+        return redirect()->route("home");
     }
 
     public function edit($id) {
@@ -110,12 +113,24 @@ class Home extends Component
         // Session flash untuk memberikan informasi data yang sudah berhasil dihapus
         session()->flash("success","Data berhasil dihapus!");
 
-        // Hapus data pada form input yang ada
+        // Lakukan refresh untuk seolah clear page pagination
         $this->clear();
+        return redirect()->route("home");
+    }
+
+    public function deleteBulk() {
+        if (count($this->employee_selected_id)) {
+            for ($i=0; $i < count($this->employee_selected_id); $i++) {
+                Employee::findOrFail($this->employee_selected_id[$i])->delete();
+            }
+        }
+
+        // Session flash untuk memberikan informasi data yang sudah berhasil dihapus
+        session()->flash("success","Data berhasil dihapus!");
 
         // Lakukan refresh untuk seolah clear page pagination
-        // return redirect("/");
-        $this->resetPage();
+        $this->clear();
+        return redirect()->route("home");
     }
 
     public function updatingKeywords()
