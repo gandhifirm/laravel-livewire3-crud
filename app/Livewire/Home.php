@@ -32,6 +32,7 @@ class Home extends Component
     }
 
     public function updatedSelectAll($value) {
+        // Jika check Select All dipilih, maka seluruh pilihan akan terseleksi
         if ($value) {
             $this->employee_selected_id = Employee::pluck('id')->toArray();
         } else {
@@ -40,12 +41,21 @@ class Home extends Component
     }
 
     public function updatedEmployeeSelectedId($value) {
+        // Hitung berapa jumlah data di database
         $totalData = Employee::all()->count();
 
-        if ($value <= $totalData) {
+        // Jika jumlah yang di select sama dengan total data
+        // Maka Select All is True (checked)
+        if ($value == $totalData) {
             $this->selectAll = true;
         } else {
             $this->selectAll = false;
+        }
+
+        // Jika jumlah data yang dipilih sama dengan jumlah total data pada database
+        // Maka Select All is True (checked)
+        if (count($this->employee_selected_id) == $totalData) {
+            $this->selectAll = true;
         }
     }
 
