@@ -20,6 +20,7 @@ class Home extends Component
     public $employee_data;
     public $keywords = '';
     public $employee_selected_id = [];
+    public $selectAll = false;
 
     public function clear() {
         // hapus isian form input
@@ -28,6 +29,24 @@ class Home extends Component
         $this->address = '';
         $this->update_data = false;
         $this->employee_id = [];
+    }
+
+    public function updatedSelectAll($value) {
+        if ($value) {
+            $this->employee_selected_id = Employee::pluck('id')->toArray();
+        } else {
+            $this->employee_selected_id = [];
+        }
+    }
+
+    public function updatedEmployeeSelectedId($value) {
+        $totalData = Employee::all()->count();
+
+        if ($value <= $totalData) {
+            $this->selectAll = true;
+        } else {
+            $this->selectAll = false;
+        }
     }
 
     public function store() {
@@ -119,7 +138,7 @@ class Home extends Component
     }
 
     public function deleteBulk() {
-        if (count($this->employee_selected_id)) {
+        if (count($this->employee_selected_id = [])) {
             for ($i=0; $i < count($this->employee_selected_id); $i++) {
                 Employee::findOrFail($this->employee_selected_id[$i])->delete();
             }

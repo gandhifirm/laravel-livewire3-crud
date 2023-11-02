@@ -123,7 +123,9 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <tr class="text-center align-middle">
-                                <th></th>
+                                <th>
+                                    <input type="checkbox" class="form-check-input" wire:model.live='selectAll'>
+                                </th>
                                 <th>No</th>
                                 <th>Nama Lengkap</th>
                                 <th>Email</th>
