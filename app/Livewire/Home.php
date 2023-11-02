@@ -136,8 +136,12 @@ class Home extends Component
         $this->clear();
     }
 
-    public function delete($id) {
-        Employee::findOrFail($id)->delete();
+    public function deleteConfirmation($id) {
+        $this->employee_id = $id;
+    }
+
+    public function delete() {
+        Employee::findOrFail($this->employee_id)->delete();
 
         // Session flash untuk memberikan informasi data yang sudah berhasil dihapus
         session()->flash("success","Data berhasil dihapus!");
@@ -148,7 +152,8 @@ class Home extends Component
     }
 
     public function deleteBulk() {
-        if (count($this->employee_selected_id = [])) {
+        // Jika ada employee_id yang dipilih
+        if (count($this->employee_selected_id)) {
             for ($i=0; $i < count($this->employee_selected_id); $i++) {
                 Employee::findOrFail($this->employee_selected_id[$i])->delete();
             }
@@ -170,6 +175,8 @@ class Home extends Component
 
     public function render()
     {
+        $countData = Employee::all()->count();
+
         // Cek kondisi apakah ada inputan pada form pencarian
         if ($this->keywords != null) {
             // Tampilkan kondisi sesuai dengan keyword yang dimasukan
@@ -180,11 +187,12 @@ class Home extends Component
                         ->paginate(2);
         } else {
             // Tampilkan seluruh data dari database
-            $employees = Employee::orderBy("id","desc")->paginate(2);
+            $employees = Employee::orderBy("id","desc")->paginate(3);
         }
 
         return view('livewire.home',[
             'employees' => $employees,
+            'countData' => $countData
         ])
             ->layout('layouts.app');
     }

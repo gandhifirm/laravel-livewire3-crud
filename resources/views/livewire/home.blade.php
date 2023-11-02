@@ -89,7 +89,7 @@
 
                         @if ($employee_selected_id)
                             <div class="mt-3 mb-2">
-                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modal_confirm_delete">Hapus {{ count($employee_selected_id) }} Data</button>
+                                <button type="button" class="btn btn-sm btn-danger" wire:click="deleteConfirmation('')" data-bs-toggle="modal" data-bs-target="#modal_confirm_delete">Hapus {{ count($employee_selected_id) }} Data</button>
 
                                 {{-- modal confirm delete data --}}
                                 <div wire:ignore.self class="modal fade" id="modal_confirm_delete" tabindex="-1" aria-labelledby="modal_confirm_delete_label" aria-hidden="true">
@@ -124,7 +124,7 @@
                         <table class="table table-bordered table-striped">
                             <tr class="text-center align-middle">
                                 <th>
-                                    <input type="checkbox" class="form-check-input" wire:model.live='selectAll'>
+                                    <input type="checkbox" class="form-check-input" @if($countData == 0) disabled @endif wire:model.live='selectAll'>
                                 </th>
                                 <th>No</th>
                                 <th>Nama Lengkap</th>
@@ -153,7 +153,7 @@
                                 <td>
                                     <div class="d-flex align-items-center justify-content-center">
                                         <button type="button" wire:click='edit({{ $employee->id }})' class="btn btn-sm btn-warning">Edit</button>
-                                        <button type="button" class="btn btn-sm btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#modal_confirm_delete_{{ $employee->id }}">Hapus</button>
+                                        <button type="button" class="btn btn-sm btn-danger ms-2" wire:click='deleteConfirmation({{ $employee->id }})' data-bs-toggle="modal" data-bs-target="#modal_confirm_delete_{{ $employee->id }}">Hapus</button>
                                     </div>
 
                                     {{-- modal confirm delete data --}}
@@ -175,7 +175,7 @@
 
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                    <button wire:click='delete({{ $employee->id }})' type="button" class="btn btn-primary" data-bs-dismiss="modal">Ya, Hapus</button>
+                                                    <button wire:click='delete()' type="button" class="btn btn-primary" data-bs-dismiss="modal">Ya, Hapus</button>
                                                 </div>
                                             </div>
                                         </div>
