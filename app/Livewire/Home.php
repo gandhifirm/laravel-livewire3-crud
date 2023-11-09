@@ -21,6 +21,8 @@ class Home extends Component
     public $keywords = '';
     public $employee_selected_id = [];
     public $selectAll = false;
+    public $sortColumn = 'full_name';
+    public $sortDirection = 'asc';
 
     public function clear() {
         // hapus isian form input
@@ -173,6 +175,11 @@ class Home extends Component
         $this->resetPage();
     }
 
+    public function sort($columnName) {
+        $this->sortColumn = $columnName;
+        $this->sortDirection = $this->sortDirection == 'asc' ? 'desc':'asc';
+    }
+
     public function render()
     {
         $countData = Employee::all()->count();
@@ -183,11 +190,11 @@ class Home extends Component
             $employees = Employee::where("full_name","LIKE","%". $this->keywords ."%")
                         ->orWhere("email","LIKE","%". $this->keywords ."%")
                         ->orWhere("address","LIKE","%". $this->keywords ."%")
-                        ->orderBy("id","DESC")
+                        ->orderBy($this->sortColumn, $this->sortDirection)
                         ->paginate(2);
         } else {
             // Tampilkan seluruh data dari database
-            $employees = Employee::orderBy("id","desc")->paginate(3);
+            $employees = Employee::orderBy($this->sortColumn, $this->sortDirection)->paginate(3);
         }
 
         return view('livewire.home',[
